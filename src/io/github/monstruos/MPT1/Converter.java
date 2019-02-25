@@ -3,7 +3,10 @@ package io.github.monstruos.MPT1;
 import static java.lang.Math.round;
 
 public class Converter {
-    public static String convertToString(double number, char base, int precision) {
+    public static final int MIN_BASE = 2;
+    public static final int MAX_BASE = 16;
+
+    public static String convertToString(double number, int base, int precision) {
         StringBuilder strNumber = new StringBuilder();
 
         long intPart = (long) number;
@@ -42,7 +45,7 @@ public class Converter {
         return strNumber.length() == 0 ? "0" : strNumber.toString();
     }
 
-    public static double convertToDouble(String number, char base) {
+    public static double convertToDouble(String number, int base) {
         int pos = number.indexOf('.');
 
         double result;
@@ -76,8 +79,8 @@ public class Converter {
             throw new IllegalArgumentException("Digit must be in range [0, " + base + ")");
         }
 
-        if (base < 2 || base > 16) {
-            throw new IllegalArgumentException("Base must be in range [0, 16]");
+        if (base < MIN_BASE || base > MAX_BASE) {
+            throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
         return (char) (digit < 10 ? '0' + digit : 'A' + digit - 10);
