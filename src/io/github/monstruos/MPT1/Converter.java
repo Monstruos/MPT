@@ -5,8 +5,18 @@ import static java.lang.Math.round;
 public class Converter {
     public static final int MIN_BASE = 2;
     public static final int MAX_BASE = 16;
+    public static final int MAX_PRECISION = 15;
+    private static final Character SEPARATOR = '.';
 
     public static String convertToString(double number, int base, int precision) {
+        if (MIN_BASE > base || base > MAX_BASE) {
+            throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
+        }
+
+        if (precision < 0) {
+            throw new IllegalArgumentException("Precision must be non-negative number");
+        }
+
         StringBuilder strNumber = new StringBuilder();
 
         long intPart = (long) number;
@@ -20,10 +30,14 @@ public class Converter {
             intPart /= base;
         }
 
-        strNumber.reverse();
+        if (strNumber.length() == 0) {
+            strNumber.append('0');
+        } else {
+            strNumber.reverse();
+        }
 
         if (fracPart != 0) {
-            strNumber.append('.');
+            strNumber.append(SEPARATOR);
 
             for (int exp = 0; exp < precision - 1; ++exp) {
                 char digit = (char) (fracPart *= base);
@@ -42,11 +56,15 @@ public class Converter {
             strNumber.append(convertDigit(digit, base));
         }
 
-        return strNumber.length() == 0 ? "0" : strNumber.toString();
+        return strNumber.toString();
     }
 
     public static double convertToDouble(String number, int base) {
-        int pos = number.indexOf('.');
+        if (MIN_BASE > base || base > MAX_BASE) {
+            throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
+        }
+
+        int pos = number.indexOf(SEPARATOR);
 
         double result;
 
@@ -55,6 +73,11 @@ public class Converter {
             double fracPart;
 
             String fracSubstr = number.substring(pos + 1);
+
+            if (fracSubstr.length() > MAX_PRECISION) {
+                fracSubstr = fracSubstr.substring(0, MAX_PRECISION);
+            }
+
             fracPart = Long.parseLong(fracSubstr, base);
 
             while (fracPart >= 1) {
@@ -74,12 +97,11 @@ public class Converter {
     }
 
     public static char convertDigit(int digit, int base) {
-
-        if (digit < 0 || digit >= base) {
+        if (digit < 0 || digit > base) {
             throw new IllegalArgumentException("Digit must be in range [0, " + base + ")");
         }
 
-        if (base < MIN_BASE || base > MAX_BASE) {
+        if (MIN_BASE > base || base > MAX_BASE) {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
