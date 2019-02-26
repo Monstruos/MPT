@@ -13,8 +13,8 @@ public class Converter {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
-        if (precision < 0) {
-            throw new IllegalArgumentException("Precision must be non-negative number");
+        if (0 > precision || precision > MAX_PRECISION) {
+            throw new IllegalArgumentException("Precision is not supported");
         }
 
         StringBuilder strNumber = new StringBuilder();
