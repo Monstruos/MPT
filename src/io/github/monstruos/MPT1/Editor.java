@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Editor extends JFrame {
     private static char SEPARATOR = '.';
@@ -39,14 +41,21 @@ public class Editor extends JFrame {
     private JButton dotButton;
     private JPanel rootPanel;
 
+    private History historyWindow;
+    private Helper helpWindow;
+    private int lastInputBase;
+
     public Editor() {
         setMinimumSize(new Dimension(400, 500));
         setContentPane(rootPanel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        historyWindow = new History();
+
         inputBaseSpinner.setValue(16);
         resultBaseSpinner.setValue(16);
+        lastInputBase = 16;
 
         executeButton.addActionListener(e -> execute());
         a0Button.addActionListener(e -> addDigit(0));
@@ -72,9 +81,32 @@ public class Editor extends JFrame {
         resultBaseSpinner.addChangeListener(e -> setResultBaseValue((Integer) resultBaseSpinner.getValue()));
         inputSlider.addChangeListener(e -> setInputBaseValue(inputSlider.getValue()));
         resultSlider.addChangeListener(e -> setResultBaseValue(resultSlider.getValue()));
+        helpButton.addActionListener(e -> showHelpWindow());
+        historyButton.addActionListener(e -> showHistoryWindow());
     }
 
+    private void showHelpWindow() {
+        if (helpWindow == null) {
+            helpWindow = new Helper();
+        } else {
+            helpWindow.setVisible(true);
+        }
+    }
+
+    private void showHistoryWindow() {
+        historyWindow.setVisible(true);
+    }
+
+
     private void setInputBaseValue(Integer value) {
+        final String prevInputValue = input.getText();
+        final int precision = prevInputValue.length() - prevInputValue.indexOf('.') - 1;
+        final double doubleValue = Converter.convertToDouble(prevInputValue, lastInputBase);
+        final String newInputValue = Converter.convertToString(doubleValue, value, precision);
+        input.setText(newInputValue);
+
+        lastInputBase = value;
+
         setBaseValue(value, inputBaseSpinner, inputSlider);
     }
 
@@ -132,13 +164,15 @@ public class Editor extends JFrame {
         final String inputValue = input.getText();
         final int inputBase = inputSlider.getValue();
 
-        final int precision = inputValue.length() - inputValue.indexOf('.');
+        final int precision = inputValue.length() - inputValue.indexOf('.') - 1;
 
-        final double value = Converter.convertToDouble(inputValue, (char) inputBase);
+        final double value = Converter.convertToDouble(inputValue, inputBase);
 
         final int resultBase = resultSlider.getValue();
 
-        final String resultValue = Converter.convertToString(value, (char) resultBase, precision);
+        final String resultValue = Converter.convertToString(value, resultBase, precision);
+
+        historyWindow.addEntry(inputValue + ", " + inputBase + " => " + resultValue + ", " + resultBase);
 
         result.setText(resultValue);
     }
