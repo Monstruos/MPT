@@ -5,8 +5,8 @@ import static java.lang.Math.round;
 public class Converter {
     public static final int MIN_BASE = 2;
     public static final int MAX_BASE = 16;
-    public static final int MAX_PRECISION = 15;
-    private static final Character SEPARATOR = '.';
+    public static final int MAX_PRECISION = 13;
+    public static final Character SEPARATOR = '.';
 
     public static String convertToString(double number, int base, int precision) {
         if (MIN_BASE > base || base > MAX_BASE) {
@@ -70,24 +70,26 @@ public class Converter {
 
         if (pos != -1) {
             long intPart = Long.parseLong(number.substring(0, pos), base);
-            double fracPart;
+            double fracPart = 0.0;
 
             String fracSubstr = number.substring(pos + 1);
 
-            if (fracSubstr.length() > MAX_PRECISION) {
-                fracSubstr = fracSubstr.substring(0, MAX_PRECISION);
+            if (fracSubstr.length() > 0) {
+
+                if (fracSubstr.length() > MAX_PRECISION) {
+                    fracSubstr = fracSubstr.substring(0, MAX_PRECISION);
+                }
+
+                fracPart = Long.parseLong(fracSubstr, base);
+
+                while (fracPart >= 1) {
+                    fracPart /= base;
+                }
+
+                for (int idx = 0; idx < fracSubstr.length() && fracSubstr.charAt(idx) == '0'; ++idx) {
+                    fracPart /= base;
+                }
             }
-
-            fracPart = Long.parseLong(fracSubstr, base);
-
-            while (fracPart >= 1) {
-                fracPart /= base;
-            }
-
-            for (int idx = 0; idx < fracSubstr.length() && fracSubstr.charAt(idx) == '0'; ++idx) {
-                fracPart /= base;
-            }
-
             result = intPart + fracPart;
         } else {
             result = Long.parseLong(number, base);
