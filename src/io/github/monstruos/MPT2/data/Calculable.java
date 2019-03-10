@@ -9,5 +9,9 @@ public interface Calculable<CalcT> {
 
     CalcT div(final CalcT other);
 
+    CalcT sqr();
+
+    CalcT inv();
+
     boolean isZero();
 }

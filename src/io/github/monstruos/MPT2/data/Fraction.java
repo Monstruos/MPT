@@ -1,53 +1,96 @@
 package io.github.monstruos.MPT2.data;
 
+import java.util.Objects;
+
 public class Fraction implements Calculable<Fraction> {
-    private int numer;
-    private int denom;
+    private int numerator;
+    private int denominator;
 
-    private static final Fraction ZERO = new Fraction(0, 1);
-
-    public Fraction(final int numer, final int denom) {
-        if (denom == 0) {
-            throw new ArithmeticException("Trying to create (" + numer + "/0) fraction");
+    public Fraction(final int numerator, final int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Trying to create (" + numerator + "/0) fraction");
         }
-        this.numer = numer;
-        this.denom = denom;
-        shortify();
+
+        this.numerator = numerator;
+        this.denominator = denominator;
+
+        reduce();
     }
 
-    private void shortify() {
-        int k = gcd(numer, denom);
-        numer /= k;
-        denom /= k;
+    private static int gcd(final int a, final int b) {
+        return b != 0 ? gcd(b, a % b) : a;
     }
 
-    private static int gcd(int a, int b) {
-        return b > 0 ? gcd(b, a%b) : a;
-    }
+    private void reduce() {
+        int gcd = gcd(numerator, denominator);
 
-    @Override
-    public Fraction add(Fraction other) {
-
-        return null;
+        numerator /= gcd;
+        denominator /= gcd;
     }
 
     @Override
-    public Fraction sub(Fraction other) {
-        return null;
+    public Fraction add(final Fraction other) {
+        return new Fraction(
+                numerator * other.denominator + denominator * other.numerator,
+                denominator * other.denominator
+        );
     }
 
     @Override
-    public Fraction mul(Fraction other) {
-        return null;
+    public Fraction sub(final Fraction other) {
+        return new Fraction(
+                numerator * other.denominator - denominator * other.numerator,
+                denominator * other.denominator
+        );
     }
 
     @Override
-    public Fraction div(Fraction other) {
-        return null;
+    public Fraction mul(final Fraction other) {
+        return new Fraction(numerator * other.numerator, denominator * other.denominator);
+    }
+
+    @Override
+    public Fraction div(final Fraction other) {
+        return new Fraction(numerator * other.denominator, denominator * other.numerator);
+    }
+
+    @Override
+    public Fraction sqr() {
+        return new Fraction(numerator * numerator, denominator * denominator);
+    }
+
+    @Override
+    public Fraction inv() {
+        return new Fraction(denominator, numerator);
     }
 
     @Override
     public boolean isZero() {
-        return false;
+        return numerator == 0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%d/%d]", numerator, denominator);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Fraction fraction = (Fraction) o;
+
+        return numerator == fraction.numerator && denominator == fraction.denominator;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
     }
 }
