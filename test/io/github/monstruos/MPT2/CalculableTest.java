@@ -1,4 +1,4 @@
-package io.github.monstruos.MPT1;
+package io.github.monstruos.MPT2;
 
 import io.github.monstruos.MPT2.data.Complex;
 import io.github.monstruos.MPT2.data.Fraction;
