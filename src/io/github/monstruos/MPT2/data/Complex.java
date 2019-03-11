@@ -53,6 +53,11 @@ public class Complex implements Calculable<Complex> {
     }
 
     @Override
+    public Complex neg() {
+        return new Complex(-re, -im);
+    }
+
+    @Override
     public boolean isZero() {
         return re == 0 && im == 0;
     }

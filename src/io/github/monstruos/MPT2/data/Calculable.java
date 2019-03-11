@@ -13,5 +13,7 @@ public interface Calculable<CalcT> {
 
     CalcT inv();
 
+    CalcT neg();
+
     boolean isZero();
 }

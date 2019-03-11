@@ -4,7 +4,7 @@ import io.github.monstruos.MPT1.Converter;
 
 import java.util.Objects;
 
-public class NumberWithBase implements Calculable<NumberWithBase>{
+public class NumberWithBase implements Calculable<NumberWithBase> {
     private static final int MIN_BASE = Converter.MIN_BASE;
     private static final int MAX_BASE = Converter.MAX_BASE;
     private static final int MAX_PRECISION = Converter.MAX_PRECISION;
@@ -75,6 +75,11 @@ public class NumberWithBase implements Calculable<NumberWithBase>{
         }
 
         return new NumberWithBase(1.0 / number, base, precision);
+    }
+
+    @Override
+    public NumberWithBase neg() {
+        return new NumberWithBase(-number, base, precision);
     }
 
     @Override

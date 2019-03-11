@@ -65,6 +65,11 @@ public class Fraction implements Calculable<Fraction> {
     }
 
     @Override
+    public Fraction neg() {
+        return new Fraction(-numerator, denominator);
+    }
+
+    @Override
     public boolean isZero() {
         return numerator == 0;
     }

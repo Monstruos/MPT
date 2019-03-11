@@ -100,6 +100,15 @@ class CalculableTest {
     }
 
     @Test
+    void neg() {
+        assertEquals(new Fraction(-1, 2), new Fraction(1, 2).neg());
+
+        assertEquals(new NumberWithBase(-1, 10, 0), new NumberWithBase(1, 10, 0).neg());
+
+        assertEquals(new Complex(-1, -2), new Complex(1, 2).neg());
+    }
+
+    @Test
     void isZero() {
         assertTrue(new Fraction(0, 1).isZero());
         assertFalse(new Fraction(1, 1).isZero());
