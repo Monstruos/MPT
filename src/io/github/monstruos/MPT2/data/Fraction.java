@@ -3,6 +3,8 @@ package io.github.monstruos.MPT2.data;
 import java.util.Objects;
 
 public class Fraction implements Calculable<Fraction> {
+    public static final Fraction ZERO = new Fraction(0, 1);
+
     private int numerator;
     private int denominator;
 
@@ -29,7 +31,9 @@ public class Fraction implements Calculable<Fraction> {
     }
 
     @Override
-    public Fraction add(final Fraction other) {
+    public Calculable<Fraction> add(final Calculable<Fraction> second) {
+        Fraction other = (Fraction) second;
+
         return new Fraction(
                 numerator * other.denominator + denominator * other.numerator,
                 denominator * other.denominator
@@ -37,7 +41,9 @@ public class Fraction implements Calculable<Fraction> {
     }
 
     @Override
-    public Fraction sub(final Fraction other) {
+    public Calculable<Fraction> sub(final Calculable<Fraction> second) {
+        Fraction other = (Fraction) second;
+
         return new Fraction(
                 numerator * other.denominator - denominator * other.numerator,
                 denominator * other.denominator
@@ -45,28 +51,37 @@ public class Fraction implements Calculable<Fraction> {
     }
 
     @Override
-    public Fraction mul(final Fraction other) {
+    public Calculable<Fraction> mul(final Calculable<Fraction> second) {
+        Fraction other = (Fraction) second;
+
         return new Fraction(numerator * other.numerator, denominator * other.denominator);
     }
 
     @Override
-    public Fraction div(final Fraction other) {
+    public Calculable<Fraction> div(final Calculable<Fraction> second) {
+        Fraction other = (Fraction) second;
+
         return new Fraction(numerator * other.denominator, denominator * other.numerator);
     }
 
     @Override
-    public Fraction sqr() {
+    public Calculable<Fraction> sqr() {
         return new Fraction(numerator * numerator, denominator * denominator);
     }
 
     @Override
-    public Fraction inv() {
+    public Calculable<Fraction> inv() {
         return new Fraction(denominator, numerator);
     }
 
     @Override
-    public Fraction neg() {
+    public Calculable<Fraction> neg() {
         return new Fraction(-numerator, denominator);
+    }
+
+    @Override
+    public Calculable<Fraction> zero() {
+        return ZERO;
     }
 
     @Override

@@ -3,10 +3,11 @@ package io.github.monstruos.MPT2.data;
 import java.util.Objects;
 
 public class Complex implements Calculable<Complex> {
+    public static final Complex ZERO = new Complex(0, 0);
+    public static final Complex ONE = new Complex(1, 0);
+
     private final double re;
     private final double im;
-
-    private static final Complex ONE = new Complex(1, 0);
 
     public Complex(double real, double imaginary) {
         this.re = real;
@@ -14,22 +15,30 @@ public class Complex implements Calculable<Complex> {
     }
 
     @Override
-    public Complex add(Complex other) {
+    public Calculable<Complex> add(Calculable<Complex> second) {
+        Complex other = (Complex) second;
+
         return new Complex(re + other.re, im + other.im);
     }
 
     @Override
-    public Complex sub(Complex other) {
+    public Calculable<Complex> sub(Calculable<Complex> second) {
+        Complex other = (Complex) second;
+
         return new Complex(re - other.re, im - other.im);
     }
 
     @Override
-    public Complex mul(Complex other) {
+    public Calculable<Complex> mul(Calculable<Complex> second) {
+        Complex other = (Complex) second;
+
         return new Complex(re * other.re - im * other.im, re * other.im + im * other.re);
     }
 
     @Override
-    public Complex div(Complex other) {
+    public Calculable<Complex> div(Calculable<Complex> second) {
+        Complex other = (Complex) second;
+
         if (other.isZero()) {
             throw new IllegalArgumentException("Division by zero");
         }
@@ -43,18 +52,23 @@ public class Complex implements Calculable<Complex> {
     }
 
     @Override
-    public Complex sqr() {
+    public Calculable<Complex> sqr() {
         return new Complex(re * re - im * im, 2 * re * im);
     }
 
     @Override
-    public Complex inv() {
+    public Calculable<Complex> inv() {
         return ONE.div(this);
     }
 
     @Override
-    public Complex neg() {
+    public Calculable<Complex> neg() {
         return new Complex(-re, -im);
+    }
+
+    @Override
+    public Calculable<Complex> zero() {
+        return ZERO;
     }
 
     @Override

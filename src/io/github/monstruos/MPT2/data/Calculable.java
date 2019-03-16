@@ -1,19 +1,21 @@
 package io.github.monstruos.MPT2.data;
 
-public interface Calculable<CalcT> {
-    CalcT add(final CalcT other);
+public interface Calculable<CalcT extends Calculable> {
+    Calculable<CalcT> add(final Calculable<CalcT> second);
 
-    CalcT sub(final CalcT other);
+    Calculable<CalcT> sub(final Calculable<CalcT> second);
 
-    CalcT mul(final CalcT other);
+    Calculable<CalcT> mul(final Calculable<CalcT> second);
 
-    CalcT div(final CalcT other);
+    Calculable<CalcT> div(final Calculable<CalcT> second);
 
-    CalcT sqr();
+    Calculable<CalcT> sqr();
 
-    CalcT inv();
+    Calculable<CalcT> inv();
 
-    CalcT neg();
+    Calculable<CalcT> neg();
+
+    Calculable<CalcT> zero();
 
     boolean isZero();
 }

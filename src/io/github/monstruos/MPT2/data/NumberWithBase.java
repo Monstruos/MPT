@@ -28,7 +28,9 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase add(NumberWithBase other) {
+    public Calculable<NumberWithBase> add(Calculable<NumberWithBase> second) {
+        NumberWithBase other = (NumberWithBase) second;
+
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
@@ -37,7 +39,9 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase sub(NumberWithBase other) {
+    public Calculable<NumberWithBase> sub(Calculable<NumberWithBase> second) {
+        NumberWithBase other = (NumberWithBase) second;
+
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
@@ -46,7 +50,9 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase mul(NumberWithBase other) {
+    public Calculable<NumberWithBase> mul(Calculable<NumberWithBase> second) {
+        NumberWithBase other = (NumberWithBase) second;
+
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
@@ -55,7 +61,9 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase div(NumberWithBase other) {
+    public Calculable<NumberWithBase> div(Calculable<NumberWithBase> second) {
+        NumberWithBase other = (NumberWithBase) second;
+
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
@@ -64,12 +72,12 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase sqr() {
+    public Calculable<NumberWithBase> sqr() {
         return new NumberWithBase(number * number, base, precision);
     }
 
     @Override
-    public NumberWithBase inv() {
+    public Calculable<NumberWithBase> inv() {
         if (isZero()) {
             throw new IllegalArgumentException("Division by zero!");
         }
@@ -78,8 +86,13 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public NumberWithBase neg() {
+    public Calculable<NumberWithBase> neg() {
         return new NumberWithBase(-number, base, precision);
+    }
+
+    @Override
+    public Calculable<NumberWithBase> zero() {
+        return new NumberWithBase(0, base, precision);
     }
 
     @Override
