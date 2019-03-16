@@ -4,7 +4,7 @@ import io.github.monstruos.MPT1.Converter;
 
 import java.util.Objects;
 
-public class NumberWithBase implements Calculable<NumberWithBase> {
+public class BasedNumber implements Calculable<BasedNumber> {
     private static final int MIN_BASE = Converter.MIN_BASE;
     private static final int MAX_BASE = Converter.MAX_BASE;
     private static final int MAX_PRECISION = Converter.MAX_PRECISION;
@@ -13,7 +13,7 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     private final int base;
     private final int precision;
 
-    public NumberWithBase(double number, int base, int precision) {
+    public BasedNumber(double number, int base, int precision) {
         if (MIN_BASE > base || base > MAX_BASE) {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
@@ -28,71 +28,71 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
     }
 
     @Override
-    public Calculable<NumberWithBase> add(Calculable<NumberWithBase> second) {
-        NumberWithBase other = (NumberWithBase) second;
+    public Calculable<BasedNumber> add(Calculable<BasedNumber> second) {
+        BasedNumber other = (BasedNumber) second;
 
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new NumberWithBase(number + other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number + other.number, base, Math.max(precision, other.precision));
     }
 
     @Override
-    public Calculable<NumberWithBase> sub(Calculable<NumberWithBase> second) {
-        NumberWithBase other = (NumberWithBase) second;
+    public Calculable<BasedNumber> sub(Calculable<BasedNumber> second) {
+        BasedNumber other = (BasedNumber) second;
 
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new NumberWithBase(number - other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number - other.number, base, Math.max(precision, other.precision));
     }
 
     @Override
-    public Calculable<NumberWithBase> mul(Calculable<NumberWithBase> second) {
-        NumberWithBase other = (NumberWithBase) second;
+    public Calculable<BasedNumber> mul(Calculable<BasedNumber> second) {
+        BasedNumber other = (BasedNumber) second;
 
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new NumberWithBase(number * other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number * other.number, base, Math.max(precision, other.precision));
     }
 
     @Override
-    public Calculable<NumberWithBase> div(Calculable<NumberWithBase> second) {
-        NumberWithBase other = (NumberWithBase) second;
+    public Calculable<BasedNumber> div(Calculable<BasedNumber> second) {
+        BasedNumber other = (BasedNumber) second;
 
         if (base != other.base) {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new NumberWithBase(number / other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number / other.number, base, Math.max(precision, other.precision));
     }
 
     @Override
-    public Calculable<NumberWithBase> sqr() {
-        return new NumberWithBase(number * number, base, precision);
+    public Calculable<BasedNumber> sqr() {
+        return new BasedNumber(number * number, base, precision);
     }
 
     @Override
-    public Calculable<NumberWithBase> inv() {
+    public Calculable<BasedNumber> inv() {
         if (isZero()) {
             throw new IllegalArgumentException("Division by zero!");
         }
 
-        return new NumberWithBase(1.0 / number, base, precision);
+        return new BasedNumber(1.0 / number, base, precision);
     }
 
     @Override
-    public Calculable<NumberWithBase> neg() {
-        return new NumberWithBase(-number, base, precision);
+    public Calculable<BasedNumber> neg() {
+        return new BasedNumber(-number, base, precision);
     }
 
     @Override
-    public Calculable<NumberWithBase> zero() {
-        return new NumberWithBase(0, base, precision);
+    public Calculable<BasedNumber> zero() {
+        return new BasedNumber(0, base, precision);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class NumberWithBase implements Calculable<NumberWithBase> {
             return false;
         }
 
-        NumberWithBase that = (NumberWithBase) o;
+        BasedNumber that = (BasedNumber) o;
 
         return Double.compare(that.number, number) == 0 && base == that.base && precision == that.precision;
     }
