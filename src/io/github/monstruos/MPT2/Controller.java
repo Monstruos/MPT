@@ -11,18 +11,39 @@ public class Controller<T extends Calculable<T>> {
     public enum SupportedFunction {SQR, INV}
 
     private Editor<T> editor;
-    private String rightOperand = "";
     private boolean currentOperandIsLeft = true;
     private boolean isOperationSet = false;
 
     private Calculator<T> calculator = new Calculator<>(null, null);
 
-    public void setEditor(Editor editor) {
+    private void switchOperandIfNeeded() {
+        if (isOperationSet && currentOperandIsLeft) {
+            editor.clear();
+            currentOperandIsLeft = false;
+        }
+    }
+
+    public void setEditor(Editor<T> editor) {
         this.editor = editor;
     }
 
     public void execute() {
+        if (isOperationSet) {
+            Calculable<T> right;
 
+            if (currentOperandIsLeft) {
+                right = calculator.getLeftOperand();
+            } else {
+                right = editor.getNumberValue();
+            }
+
+            calculator.setRightOperand(right);
+            calculator.apply();
+
+            editor.setValue(calculator.getLeftOperand().toString());
+
+            currentOperandIsLeft = true;
+        }
     }
 
     public String getCurrentOperand() {
@@ -30,6 +51,7 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void changeSign() {
+        switchOperandIfNeeded();
         editor.changeSign();
     }
 
@@ -49,7 +71,7 @@ public class Controller<T extends Calculable<T>> {
 
         switch (operation) {
             case ADD:
-                calculator.setOperation(Calculator.Operation.ADD);
+                calculator.setOperation(Operation.ADD);
                 break;
             case SUB:
                 calculator.setOperation(Operation.SUB);
@@ -65,6 +87,7 @@ public class Controller<T extends Calculable<T>> {
 
     public void reset() {
         editor.reset();
+        calculator.reset();
     }
 
     public void clear() {
@@ -72,14 +95,17 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void backspace() {
+        switchOperandIfNeeded();
         editor.backspace();
     }
 
     public void addSeparator() {
+        switchOperandIfNeeded();
         editor.addSeparator();
     }
 
     public void addDigit(int digit) {
+        switchOperandIfNeeded();
         editor.addDigit(digit);
     }
 

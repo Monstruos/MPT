@@ -47,7 +47,7 @@ public class BasedWindow extends CalculableWindow {
 
     private JSlider baseSlider;
     private BasedEditor editor;
-    private Controller<BasedNumber> controller;
+    private Controller<BasedNumber> controller = new Controller<>();
 
     public BasedWindow() {
         setContentPane(rootPanel);
@@ -109,6 +109,7 @@ public class BasedWindow extends CalculableWindow {
 
     private void setBaseValue(int base) {
         editor.changeBase(base);
+        inputField.setText(controller.getCurrentOperand());
     }
 
     @Override

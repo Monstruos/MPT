@@ -1,10 +1,8 @@
 package io.github.monstruos.MPT2.editors;
 
-public interface Editor<T> {
-    enum SupportedOperation {ADD, SUB, DIV, MUL}
+import io.github.monstruos.MPT2.data.Calculable;
 
-    enum SupportedFunction {SQR, INV}
-
+public interface Editor<T extends Calculable<T>> {
     void clear();
 
     void backspace();
@@ -13,15 +11,11 @@ public interface Editor<T> {
 
     void addDigit(int digit);
 
-    void setOperation(SupportedOperation operation);
-
-    void applyFunction(SupportedFunction function);
-
     void reset();
 
     void changeSign();
 
-    void execute();
+    void setValue(String value);
 
     String getStringValue();
 
