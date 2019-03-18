@@ -1,16 +1,16 @@
 package io.github.monstruos.MPT2.subforms;
 
-import io.github.monstruos.MPT2.editors.Editor;
+import io.github.monstruos.MPT2.Controller;
 
 import javax.swing.*;
 
 abstract class CalculableWindow extends JFrame {
-    private Editor editor;
+    private Controller controller;
     private JTextField input;
     private JRadioButton memoryIndicator;
 
-    protected void setEditor(Editor editor) {
-        this.editor = editor;
+    protected void setController(Controller controller) {
+        this.controller = controller;
     }
 
     protected void setInput(JTextField input) {
@@ -22,66 +22,66 @@ abstract class CalculableWindow extends JFrame {
     }
 
     protected void execute() {
-        editor.execute();
-        input.setText(editor.getCurrentOperand());
+        controller.execute();
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void changeSign() {
-        editor.changeSign();
-        input.setText(editor.getCurrentOperand());
+        controller.changeSign();
+        input.setText(controller.getCurrentOperand());
     }
 
-    protected void applyFunction(Editor.SupportedFunction function) {
-        editor.applyFunction(function);
-        input.setText(editor.getCurrentOperand());
+    protected void applyFunction(Controller.SupportedFunction function) {
+        controller.applyFunction(function);
+        input.setText(controller.getCurrentOperand());
     }
 
-    protected void setOperation(Editor.SupportedOperation operation) {
-        editor.setOperation(operation);
-        input.setText(editor.getCurrentOperand());
+    protected void setOperation(Controller.SupportedOperation operation) {
+        controller.setOperation(operation);
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void reset() {
-        editor.reset();
+        controller.reset();
     }
 
     protected void clear() {
-        editor.clear();
-        input.setText(editor.getCurrentOperand());
+        controller.clear();
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void deleteSymbolFromInput() {
-        editor.backspace();
-        input.setText(editor.getCurrentOperand());
+        controller.backspace();
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void addSeparator() {
-        editor.addSeparator();
-        input.setText(editor.getCurrentOperand());
+        controller.addSeparator();
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void addDigit(int digit) {
-        editor.addDigit(digit);
-        input.setText(editor.getCurrentOperand());
+        controller.addDigit(digit);
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void memClear() {
-        editor.memoryClear();
-        memoryIndicator.setSelected(editor.isMemoryEnabled());
+        controller.memoryClear();
+        memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 
     protected void memRead() {
-        editor.memoryRead();
-        memoryIndicator.setSelected(editor.isMemoryEnabled());
+        controller.memoryRead();
+        memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 
     protected void memSave() {
-        editor.memorySave();
-        memoryIndicator.setSelected(editor.isMemoryEnabled());
+        controller.memorySave();
+        memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 
     protected void memAdd() {
-        editor.memoryAdd();
-        memoryIndicator.setSelected(editor.isMemoryEnabled());
+        controller.memoryAdd();
+        memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 }

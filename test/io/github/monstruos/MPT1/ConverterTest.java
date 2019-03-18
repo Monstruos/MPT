@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConverterTest {
-    private static final double EPSILON = Math.pow(0.1, Converter.MAX_PRECISION);
+    private static final double EPSILON = Math.pow(0.1, Converter.MAX_DECIMAL_PRECISION);
 
     @Test
     void whenZeroInCorrectBaseThenStringValueIsZero() {
         for (int base = Converter.MIN_BASE; base <= Converter.MAX_BASE; ++base) {
-            for (int precision = 0; precision <= Converter.MAX_PRECISION; ++precision) {
+            for (int precision = 0; precision <= Converter.MAX_DECIMAL_PRECISION; ++precision) {
                 assertEquals("0", Converter.convertToString(0, base, precision));
                 assertEquals("0", Converter.convertToString(0.0, base, precision));
             }
@@ -20,7 +20,7 @@ class ConverterTest {
     @Test
     void whenDecimalIntegerThenStringValueIsThatInteger() {
         for (int number = 1; number < Converter.MAX_BASE * 2; ++number) {
-            for (int precision = 0; precision <= Converter.MAX_PRECISION; ++precision) {
+            for (int precision = 0; precision <= Converter.MAX_DECIMAL_PRECISION; ++precision) {
                 assertEquals(String.valueOf(number), Converter.convertToString(number, 10, precision));
             }
         }
@@ -72,7 +72,7 @@ class ConverterTest {
     @Test
     void whenDoubleValueToStringAndToDoubleThenDoubleValue() {
         for (double number = 0.1; number < Converter.MAX_BASE; number += 0.1) {
-            double convertedValue = Converter.convertToDouble(Converter.convertToString(number, 10, Converter.MAX_PRECISION), 10);
+            double convertedValue = Converter.convertToDouble(Converter.convertToString(number, 10, Converter.MAX_DECIMAL_PRECISION), 10);
             double diff = Math.abs(number - convertedValue);
 
             assertTrue(diff < EPSILON, number + " is not equal to " + convertedValue);

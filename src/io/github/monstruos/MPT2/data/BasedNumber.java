@@ -7,7 +7,8 @@ import java.util.Objects;
 public class BasedNumber implements Calculable<BasedNumber> {
     private static final int MIN_BASE = Converter.MIN_BASE;
     private static final int MAX_BASE = Converter.MAX_BASE;
-    private static final int MAX_PRECISION = Converter.MAX_PRECISION;
+
+    public static final char SEPARATOR = Converter.SEPARATOR;
 
     private final double number;
     private final int base;
@@ -18,13 +19,29 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
-        if (0 > precision || precision > MAX_PRECISION) {
+        if (0 > precision || precision > maxPrecisionForBase(base)) {
             throw new IllegalArgumentException("Precision is not supported");
         }
 
         this.number = number;
         this.base = base;
         this.precision = precision;
+    }
+
+    public static BasedNumber valueOf(String number, int base, int precision) {
+        return new BasedNumber(Converter.convertToDouble(number, base), base, precision);
+    }
+
+    public double getDoubleValue() {
+        return number;
+    }
+
+    public static char convertDigit(int digit, int base) {
+        return Converter.convertDigit(digit, base);
+    }
+
+    public static int maxPrecisionForBase(int base) {
+        return Converter.maxPrecisionForBase(base);
     }
 
     @Override

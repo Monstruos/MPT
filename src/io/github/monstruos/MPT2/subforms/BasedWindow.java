@@ -1,11 +1,12 @@
 package io.github.monstruos.MPT2.subforms;
 
+import io.github.monstruos.MPT2.Controller;
+import io.github.monstruos.MPT2.data.BasedNumber;
 import io.github.monstruos.MPT2.editors.BasedEditor;
 
 import javax.swing.*;
 
-import static io.github.monstruos.MPT2.editors.Editor.SupportedFunction;
-import static io.github.monstruos.MPT2.editors.Editor.SupportedOperation;
+import static io.github.monstruos.MPT2.Controller.*;
 
 public class BasedWindow extends CalculableWindow {
     private JPanel rootPanel;
@@ -45,15 +46,18 @@ public class BasedWindow extends CalculableWindow {
     private JRadioButton mIndicator;
 
     private JSlider baseSlider;
-    private BasedEditor editor = new BasedEditor();
+    private BasedEditor editor;
+    private Controller<BasedNumber> controller;
 
     public BasedWindow() {
         setContentPane(rootPanel);
 
         int startBase = 10;
         baseSlider.setValue(startBase);
+        editor = new BasedEditor(startBase);
 
-        setEditor(editor);
+        controller.setEditor(editor);
+        setController(controller);
         setInput(inputField);
         setMemoryIndicator(mIndicator);
 
@@ -104,9 +108,18 @@ public class BasedWindow extends CalculableWindow {
     }
 
     private void setBaseValue(int base) {
-        editor.setBase(base);
+        editor.changeBase(base);
+    }
 
-        inputField.setText(editor.getCurrentOperand());
-        baseSlider.setValue(editor.getBase());
+    @Override
+    protected void setOperation(Controller.SupportedOperation operation) {
+        super.setOperation(operation);
+        baseSlider.setEnabled(false);
+    }
+
+    @Override
+    protected void execute() {
+        super.execute();
+        baseSlider.setEnabled(true);
     }
 }

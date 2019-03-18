@@ -1,19 +1,21 @@
 package io.github.monstruos.MPT1;
 
+import static java.lang.Math.log10;
 import static java.lang.Math.round;
 
 public class Converter {
     public static final int MIN_BASE = 2;
     public static final int MAX_BASE = 16;
-    public static final int MAX_PRECISION = 13;
     public static final Character SEPARATOR = '.';
+
+    private static final int MAX_DECIMAL_PRECISION = 10;
 
     public static String convertToString(double number, int base, int precision) {
         if (MIN_BASE > base || base > MAX_BASE) {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
-        if (0 > precision || precision > MAX_PRECISION) {
+        if (0 > precision || precision > maxPrecisionForBase(base)) {
             throw new IllegalArgumentException("Precision is not supported");
         }
 
@@ -75,9 +77,10 @@ public class Converter {
             String fracSubstr = number.substring(pos + 1);
 
             if (fracSubstr.length() > 0) {
+                int maxPrecision = maxPrecisionForBase(base);
 
-                if (fracSubstr.length() > MAX_PRECISION) {
-                    fracSubstr = fracSubstr.substring(0, MAX_PRECISION);
+                if (fracSubstr.length() > maxPrecision) {
+                    fracSubstr = fracSubstr.substring(0, maxPrecision);
                 }
 
                 fracPart = Long.parseLong(fracSubstr, base);
@@ -108,5 +111,9 @@ public class Converter {
         }
 
         return (char) (digit < 10 ? '0' + digit : 'A' + digit - 10);
+    }
+
+    public static int maxPrecisionForBase(int base) {
+        return (int) (MAX_DECIMAL_PRECISION / log10(base));
     }
 }

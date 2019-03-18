@@ -1,6 +1,6 @@
 package io.github.monstruos.MPT2.editors;
 
-public interface Editor {
+public interface Editor<T> {
     enum SupportedOperation {ADD, SUB, DIV, MUL}
 
     enum SupportedFunction {SQR, INV}
@@ -23,15 +23,7 @@ public interface Editor {
 
     void execute();
 
-    void memoryClear();
+    String getStringValue();
 
-    void memoryRead();
-
-    void memorySave();
-
-    void memoryAdd();
-
-    boolean isMemoryEnabled();
-
-    String getCurrentOperand();
+    T getNumberValue();
 }
