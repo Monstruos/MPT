@@ -12,24 +12,18 @@ public class BasedNumber implements Calculable<BasedNumber> {
 
     private final double number;
     private final int base;
-    private final int precision;
 
-    public BasedNumber(double number, int base, int precision) {
+    public BasedNumber(double number, int base) {
         if (MIN_BASE > base || base > MAX_BASE) {
             throw new IllegalArgumentException("Base must be in range [" + MIN_BASE + ", " + MAX_BASE + "]");
         }
 
-        if (0 > precision || precision > maxPrecisionForBase(base)) {
-            throw new IllegalArgumentException("Precision is not supported");
-        }
-
         this.number = number;
         this.base = base;
-        this.precision = precision;
     }
 
-    public static BasedNumber valueOf(String number, int base, int precision) {
-        return new BasedNumber(Converter.convertToDouble(number, base), base, precision);
+    public static BasedNumber valueOf(String number, int base) {
+        return new BasedNumber(Converter.convertToDouble(number, base), base);
     }
 
     public static char convertDigit(int digit, int base) {
@@ -48,7 +42,7 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new BasedNumber(number + other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number + other.number, base);
     }
 
     @Override
@@ -59,7 +53,7 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new BasedNumber(number - other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number - other.number, base);
     }
 
     @Override
@@ -70,9 +64,7 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        final int newPrecision = Math.max(precision + other.precision, maxPrecisionForBase(base));
-
-        return new BasedNumber(number * other.number, base, newPrecision);
+        return new BasedNumber(number * other.number, base);
     }
 
     @Override
@@ -83,13 +75,12 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new BasedNumber(number / other.number, base, Math.max(precision, other.precision));
+        return new BasedNumber(number / other.number, base);
     }
 
     @Override
     public Calculable<BasedNumber> sqr() {
-        final int newPrecision = Math.max(precision * 2, maxPrecisionForBase(base));
-        return new BasedNumber(number * number, base, newPrecision);
+        return new BasedNumber(number * number, base);
     }
 
     @Override
@@ -98,17 +89,17 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Division by zero!");
         }
 
-        return new BasedNumber(1.0 / number, base, precision);
+        return new BasedNumber(1.0 / number, base);
     }
 
     @Override
     public Calculable<BasedNumber> neg() {
-        return new BasedNumber(-number, base, precision);
+        return new BasedNumber(-number, base);
     }
 
     @Override
     public Calculable<BasedNumber> zero() {
-        return new BasedNumber(0, base, precision);
+        return new BasedNumber(0, base);
     }
 
     @Override
@@ -118,7 +109,7 @@ public class BasedNumber implements Calculable<BasedNumber> {
 
     @Override
     public String toString() {
-        return Converter.convertToString(number, base, precision);
+        return Converter.convertToString(number, base, maxPrecisionForBase(base)).replaceAll("0+$", "");
     }
 
     @Override
@@ -133,11 +124,11 @@ public class BasedNumber implements Calculable<BasedNumber> {
 
         BasedNumber that = (BasedNumber) o;
 
-        return Double.compare(that.number, number) == 0 && base == that.base && precision == that.precision;
+        return Double.compare(that.number, number) == 0 && base == that.base;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, base, precision);
+        return Objects.hash(number, base);
     }
 }

@@ -22,7 +22,7 @@ public class BasedEditor implements Editor<BasedNumber> {
 
     @Override
     public void setValue(String value) {
-        this.value = BasedNumber.valueOf(value, base, precision).toString();
+        this.value = BasedNumber.valueOf(value, base).toString();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BasedEditor implements Editor<BasedNumber> {
 
     @Override
     public BasedNumber getNumberValue() {
-        return BasedNumber.valueOf(getStringValue(), base, precision);
+        return BasedNumber.valueOf(getStringValue(), base);
     }
 
     @Override
