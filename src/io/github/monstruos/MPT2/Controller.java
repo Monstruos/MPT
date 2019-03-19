@@ -14,17 +14,23 @@ public class Controller<T extends Calculable<T>> {
     private boolean currentOperandIsLeft = true;
     private boolean isOperationSet = false;
 
-    private Calculator<T> calculator = new Calculator<>(null, null);
+    private Calculator<T> calculator;
+    private Memory<T> memory;
+
+    public Controller(Editor<T> editor) {
+        this.editor = editor;
+
+        final Calculable<T> initValue = editor.getNumberValue().zero();
+
+        calculator = new Calculator<>(initValue, initValue);
+        memory = new Memory<>(initValue);
+    }
 
     private void switchOperandIfNeeded() {
         if (isOperationSet && currentOperandIsLeft) {
             editor.clear();
             currentOperandIsLeft = false;
         }
-    }
-
-    public void setEditor(Editor<T> editor) {
-        this.editor = editor;
     }
 
     public void execute() {
@@ -110,22 +116,22 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void memoryClear() {
-
+        memory.clear();
     }
 
     public void memoryRead() {
-
+        editor.setValue(memory.getNumber().toString());
     }
 
-    public void memorySave() {
-
+    public void memoryWrite() {
+        memory.setNumber(editor.getNumberValue());
     }
 
     public void memoryAdd() {
-
+        memory.add(memory.getNumber());
     }
 
     public boolean isMemoryEnabled() {
-        return true;
+        return memory.isEnabled();
     }
 }

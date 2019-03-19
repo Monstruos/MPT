@@ -32,10 +32,6 @@ public class BasedNumber implements Calculable<BasedNumber> {
         return new BasedNumber(Converter.convertToDouble(number, base), base, precision);
     }
 
-    public double getDoubleValue() {
-        return number;
-    }
-
     public static char convertDigit(int digit, int base) {
         return Converter.convertDigit(digit, base);
     }
@@ -74,7 +70,9 @@ public class BasedNumber implements Calculable<BasedNumber> {
             throw new IllegalArgumentException("Terms must be in same base");
         }
 
-        return new BasedNumber(number * other.number, base, Math.max(precision, other.precision));
+        final int newPrecision = Math.max(precision + other.precision, maxPrecisionForBase(base));
+
+        return new BasedNumber(number * other.number, base, newPrecision);
     }
 
     @Override
@@ -90,7 +88,8 @@ public class BasedNumber implements Calculable<BasedNumber> {
 
     @Override
     public Calculable<BasedNumber> sqr() {
-        return new BasedNumber(number * number, base, precision);
+        final int newPrecision = Math.max(precision * 2, maxPrecisionForBase(base));
+        return new BasedNumber(number * number, base, newPrecision);
     }
 
     @Override

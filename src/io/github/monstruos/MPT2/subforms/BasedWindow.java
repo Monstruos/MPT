@@ -47,16 +47,17 @@ public class BasedWindow extends CalculableWindow {
 
     private JSlider baseSlider;
     private BasedEditor editor;
-    private Controller<BasedNumber> controller = new Controller<>();
+    private Controller<BasedNumber> controller;
 
     public BasedWindow() {
         setContentPane(rootPanel);
 
         int startBase = 10;
         baseSlider.setValue(startBase);
-        editor = new BasedEditor(startBase);
 
-        controller.setEditor(editor);
+        editor = new BasedEditor(startBase);
+        controller = new Controller<>(editor);
+
         setController(controller);
         setInput(inputField);
         setMemoryIndicator(mIndicator);

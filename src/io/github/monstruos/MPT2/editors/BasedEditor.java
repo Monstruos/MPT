@@ -16,16 +16,8 @@ public class BasedEditor implements Editor<BasedNumber> {
     }
 
     public void changeBase(int newBase) {
-        int oldBase = base;
-        int oldPrecision = precision;
-        final BasedNumber oldValue = BasedNumber.valueOf(getStringValue(), oldBase, oldPrecision);
-
-        int newPrecision = (int) Math.ceil(oldPrecision * Math.log(oldBase) / Math.log(newBase));
-        final BasedNumber newValue = new BasedNumber(oldValue.getDoubleValue(), newBase, newPrecision);
-        
-        value = newValue.toString();
+        clear();
         base = newBase;
-        precision = newPrecision;
     }
 
     @Override
@@ -95,6 +87,12 @@ public class BasedEditor implements Editor<BasedNumber> {
 
     @Override
     public void changeSign() {
-
+        if (value.startsWith("-")) {
+            value = value.substring(1);
+        } else {
+            if (!value.equals(ZERO)) {
+                value = "-" + value;
+            }
+        }
     }
 }

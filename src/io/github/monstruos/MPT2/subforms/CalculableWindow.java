@@ -76,7 +76,7 @@ abstract class CalculableWindow extends JFrame {
     }
 
     protected void memSave() {
-        controller.memorySave();
+        controller.memoryWrite();
         memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 
