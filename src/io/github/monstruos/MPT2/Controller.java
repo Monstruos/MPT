@@ -28,6 +28,7 @@ public class Controller<T extends Calculable<T>> {
 
     private void switchOperandIfNeeded() {
         if (isOperationSet && currentOperandIsLeft) {
+            calculator.setLeftOperand(editor.getNumberValue());
             editor.clear();
             currentOperandIsLeft = false;
         }
@@ -38,6 +39,7 @@ public class Controller<T extends Calculable<T>> {
             Calculable<T> right;
 
             if (currentOperandIsLeft) {
+                switchOperandIfNeeded();
                 right = calculator.getLeftOperand();
             } else {
                 right = editor.getNumberValue();
@@ -66,9 +68,6 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void setOperation(SupportedOperation operation) {
-        T left = editor.getNumberValue();
-        calculator.setLeftOperand(left);
-
         if (isOperationSet && !currentOperandIsLeft) {
             execute();
         }
