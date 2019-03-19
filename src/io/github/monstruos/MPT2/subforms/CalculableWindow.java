@@ -72,6 +72,7 @@ abstract class CalculableWindow extends JFrame {
 
     protected void memRead() {
         controller.memoryRead();
+        input.setText(controller.getCurrentOperand());
         memoryIndicator.setSelected(controller.isMemoryEnabled());
     }
 

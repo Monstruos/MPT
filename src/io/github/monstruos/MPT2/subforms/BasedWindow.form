@@ -15,7 +15,8 @@
           </grid>
         </constraints>
         <properties>
-          <enabled value="false"/>
+          <editable value="false"/>
+          <enabled value="true"/>
         </properties>
       </component>
       <grid id="a7c92" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

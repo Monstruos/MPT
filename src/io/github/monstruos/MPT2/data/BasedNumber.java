@@ -109,7 +109,20 @@ public class BasedNumber implements Calculable<BasedNumber> {
 
     @Override
     public String toString() {
-        return Converter.convertToString(number, base, maxPrecisionForBase(base)).replaceAll("0+$", "");
+        String stringValue;
+        String convertedValue = Converter.convertToString(number, base, maxPrecisionForBase(base));
+
+        int pos = convertedValue.indexOf(SEPARATOR);
+        if (pos != -1) {
+            String intPart = convertedValue.substring(0, pos);
+            String fracPart = convertedValue.substring(pos + 1).replaceAll("0+$", "");
+
+            stringValue = intPart + SEPARATOR + fracPart;
+        } else {
+            stringValue = convertedValue;
+        }
+
+        return stringValue;
     }
 
     @Override

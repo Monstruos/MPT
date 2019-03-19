@@ -13,12 +13,12 @@ class MemoryTest {
         testMemory.setNumber(testNumber);
 
         assertEquals(testMemory.getNumber(), testNumber);
-        assertFalse(testMemory.isEnabled());
+        assertTrue(testMemory.isEnabled());
 
         testMemory.clear();
 
         assertEquals(testMemory.getNumber(), new BasedNumber(0.0, 16));
-        assertTrue(testMemory.isEnabled());
+        assertFalse(testMemory.isEnabled());
     }
 
     @Test

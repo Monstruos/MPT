@@ -18,7 +18,7 @@ public class Memory<T extends Calculable<T>> {
     }
 
     public boolean isEnabled() {
-        return number.isZero();
+        return !number.isZero();
     }
 
     public void add(final Calculable<T> number) {
