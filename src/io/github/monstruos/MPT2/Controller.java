@@ -3,7 +3,7 @@ package io.github.monstruos.MPT2;
 import io.github.monstruos.MPT2.data.Calculable;
 import io.github.monstruos.MPT2.editors.Editor;
 
-import static io.github.monstruos.MPT2.Calculator.Operation;
+import static io.github.monstruos.MPT2.Calculator.*;
 
 public class Controller<T extends Calculable<T>> {
     public enum SupportedOperation {ADD, SUB, DIV, MUL}
@@ -64,7 +64,20 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void applyFunction(SupportedFunction function) {
+        final Calculable<T> oldValue = editor.getNumberValue();
 
+        calculator.setRightOperand(oldValue);
+        switch (function) {
+            case SQR:
+                calculator.apply(Function.SQR);
+                break;
+            case INV:
+                calculator.apply(Function.INV);
+                break;
+        }
+        final Calculable<T> newValue = calculator.getRightOperand();
+
+        editor.setValue(newValue.toString());
     }
 
     public void setOperation(SupportedOperation operation) {
