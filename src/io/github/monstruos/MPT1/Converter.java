@@ -21,6 +21,12 @@ public class Converter {
 
         StringBuilder strNumber = new StringBuilder();
 
+        boolean isNegative = false;
+        if (number < 0) {
+            isNegative = true;
+            number *= -1;
+        }
+
         long intPart = (long) number;
         double fracPart = number - intPart;
 
@@ -58,7 +64,7 @@ public class Converter {
             strNumber.append(convertDigit(digit, base));
         }
 
-        return strNumber.toString();
+        return isNegative ? '-' + strNumber.toString() : strNumber.toString();
     }
 
     public static double convertToDouble(String number, int base) {
@@ -98,7 +104,7 @@ public class Converter {
             result = Long.parseLong(number, base);
         }
 
-        return result;
+        return number.startsWith("-") ? -result : result;
     }
 
     public static char convertDigit(int digit, int base) {

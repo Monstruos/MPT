@@ -30,7 +30,7 @@ public class BasedNumber implements Calculable<BasedNumber> {
         return Converter.convertDigit(digit, base);
     }
 
-    public static int maxPrecisionForBase(int base) {
+    private static int maxPrecisionForBase(int base) {
         return Converter.maxPrecisionForBase(base);
     }
 
@@ -38,44 +38,66 @@ public class BasedNumber implements Calculable<BasedNumber> {
     public Calculable<BasedNumber> add(Calculable<BasedNumber> second) {
         BasedNumber other = (BasedNumber) second;
 
-        if (base != other.base) {
-            throw new IllegalArgumentException("Terms must be in same base");
-        }
+        if (isZero()) {
+            return new BasedNumber(other.number, other.base);
+        } else if (other.isZero()) {
+            return new BasedNumber(number, base);
+        } else {
+            if (base != other.base) {
+                throw new IllegalArgumentException("Terms must be in same base");
+            }
 
-        return new BasedNumber(number + other.number, base);
+            return new BasedNumber(number + other.number, base);
+        }
     }
 
     @Override
     public Calculable<BasedNumber> sub(Calculable<BasedNumber> second) {
         BasedNumber other = (BasedNumber) second;
 
-        if (base != other.base) {
-            throw new IllegalArgumentException("Terms must be in same base");
-        }
+        if (isZero()) {
+            return new BasedNumber(-other.number, other.base);
+        } else if (other.isZero()) {
+            return new BasedNumber(number, base);
+        } else {
+            if (base != other.base) {
+                throw new IllegalArgumentException("Terms must be in same base");
+            }
 
-        return new BasedNumber(number - other.number, base);
+            return new BasedNumber(number - other.number, base);
+        }
     }
 
     @Override
     public Calculable<BasedNumber> mul(Calculable<BasedNumber> second) {
         BasedNumber other = (BasedNumber) second;
 
-        if (base != other.base) {
-            throw new IllegalArgumentException("Terms must be in same base");
-        }
+        if (isZero() || other.isZero()) {
+            return new BasedNumber(0, base);
+        } else {
+            if (base != other.base) {
+                throw new IllegalArgumentException("Terms must be in same base");
+            }
 
-        return new BasedNumber(number * other.number, base);
+            return new BasedNumber(number * other.number, base);
+        }
     }
 
     @Override
     public Calculable<BasedNumber> div(Calculable<BasedNumber> second) {
         BasedNumber other = (BasedNumber) second;
 
-        if (base != other.base) {
-            throw new IllegalArgumentException("Terms must be in same base");
-        }
+        if (other.isZero()) {
+            throw new IllegalArgumentException("Division by zero!");
+        } else if (isZero()) {
+            return new BasedNumber(0, base);
+        } else {
+            if (base != other.base) {
+                throw new IllegalArgumentException("Terms must be in same base");
+            }
 
-        return new BasedNumber(number / other.number, base);
+            return new BasedNumber(number / other.number, base);
+        }
     }
 
     @Override

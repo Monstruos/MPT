@@ -43,6 +43,7 @@ abstract class CalculableWindow extends JFrame {
 
     protected void reset() {
         controller.reset();
+        input.setText(controller.getCurrentOperand());
     }
 
     protected void clear() {

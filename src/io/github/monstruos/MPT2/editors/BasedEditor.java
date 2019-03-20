@@ -8,9 +8,6 @@ public class BasedEditor implements Editor<BasedNumber> {
     private int base;
     private String value = ZERO;
 
-    private int precision = 0;
-    private boolean isDouble = false;
-
     public BasedEditor(int base) {
         this.base = base;
     }
@@ -22,61 +19,70 @@ public class BasedEditor implements Editor<BasedNumber> {
 
     @Override
     public void setValue(String value) {
-        this.value = BasedNumber.valueOf(value, base).toString();
+        this.value = value;
+        checkIfNowValid();
     }
 
     @Override
     public String getStringValue() {
+        checkIfNowValid();
         return value;
+    }
+
+    private void checkIfNowValid() {
+        try {
+            BasedNumber.valueOf(value, base);
+        } catch (NumberFormatException e) {
+            value = "#ERR";
+        }
     }
 
     @Override
     public BasedNumber getNumberValue() {
-        return BasedNumber.valueOf(getStringValue(), base);
+        try {
+            return BasedNumber.valueOf(getStringValue(), base);
+        } catch (Exception e) {
+            return BasedNumber.valueOf(ZERO, base);
+        }
     }
 
     @Override
     public void clear() {
-        precision = 0;
         value = ZERO;
-        isDouble = false;
     }
 
     @Override
     public void backspace() {
-        value = value.substring(0, value.length() - 1);
+        if (!value.startsWith("#")) {
+            value = value.substring(0, value.length() - 1);
 
-        precision = Math.max(0, precision - 1);
-        if (precision == 0) {
-            isDouble = false;
-        }
-
-        if (value.isEmpty()) {
-            value = ZERO;
+            if (value.isEmpty()) {
+                value = ZERO;
+            }
+        } else {
+            clear();
         }
     }
 
     @Override
     public void addSeparator() {
-        char SEPARATOR = BasedNumber.SEPARATOR;
-        if (value.indexOf(SEPARATOR) == -1) {
-            value += SEPARATOR;
+        if (!value.startsWith("#")) {
+            char SEPARATOR = BasedNumber.SEPARATOR;
+            if (value.indexOf(SEPARATOR) == -1) {
+                value += SEPARATOR;
+            }
         }
-        isDouble = true;
     }
 
     @Override
     public void addDigit(int digit) {
-        if (digit < base && precision < BasedNumber.maxPrecisionForBase(base)) {
-            if (value.equals(ZERO)) {
+        if (digit < base) {
+            if (value.equals(ZERO) || value.startsWith("#")) {
+                clear();
                 value = "";
             }
 
             value += BasedNumber.convertDigit(digit, base);
-
-            if (isDouble) {
-                precision++;
-            }
         }
     }
 

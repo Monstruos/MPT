@@ -62,6 +62,8 @@ public class BasedWindow extends CalculableWindow {
         setInput(inputField);
         setMemoryIndicator(mIndicator);
 
+        reset();
+
         initializeListeners();
     }
 

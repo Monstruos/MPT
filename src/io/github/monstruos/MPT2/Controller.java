@@ -10,12 +10,13 @@ public class Controller<T extends Calculable<T>> {
 
     public enum SupportedFunction {SQR, INV}
 
-    private Editor<T> editor;
-    private boolean currentOperandIsLeft = true;
-    private boolean isOperationSet = false;
+    private enum State {EditingLeftOperand, OperationSet, EditingRightOperand, OperationCompleted}
 
+    private Editor<T> editor;
     private Calculator<T> calculator;
     private Memory<T> memory;
+
+    private State state = State.EditingLeftOperand;
 
     public Controller(Editor<T> editor) {
         this.editor = editor;
@@ -27,30 +28,54 @@ public class Controller<T extends Calculable<T>> {
     }
 
     private void switchOperandIfNeeded() {
-        if (isOperationSet && currentOperandIsLeft) {
-            calculator.setLeftOperand(editor.getNumberValue());
-            editor.clear();
-            currentOperandIsLeft = false;
+        switch (state) {
+            case OperationSet:
+                calculator.setLeftOperand(editor.getNumberValue());
+                editor.clear();
+
+                state = State.EditingRightOperand;
+                break;
+
+            case OperationCompleted:
+                editor.clear();
+
+                state = State.EditingLeftOperand;
+                break;
+
+            case EditingLeftOperand:
+            case EditingRightOperand:
+                break;
         }
     }
 
     public void execute() {
-        if (isOperationSet) {
+        if (state != State.EditingLeftOperand) {
             Calculable<T> right;
 
-            if (currentOperandIsLeft) {
-                switchOperandIfNeeded();
-                right = calculator.getLeftOperand();
-            } else {
-                right = editor.getNumberValue();
+            switch (state) {
+                case OperationSet:
+                    switchOperandIfNeeded();
+                    right = calculator.getLeftOperand();
+                    calculator.setRightOperand(right);
+                    break;
+
+                case EditingRightOperand:
+                    right = editor.getNumberValue();
+                    calculator.setRightOperand(right);
+                    break;
+
+                case OperationCompleted:
+                    break;
             }
 
-            calculator.setRightOperand(right);
-            calculator.apply();
+            try {
+                calculator.apply();
+                editor.setValue(calculator.getLeftOperand().toString());
+            } catch (IllegalArgumentException e) {
+                editor.setValue("ERROR");
+            }
 
-            editor.setValue(calculator.getLeftOperand().toString());
-
-            currentOperandIsLeft = true;
+            state = State.OperationCompleted;
         }
     }
 
@@ -67,25 +92,30 @@ public class Controller<T extends Calculable<T>> {
         final Calculable<T> oldValue = editor.getNumberValue();
 
         calculator.setRightOperand(oldValue);
-        switch (function) {
-            case SQR:
-                calculator.apply(Function.SQR);
-                break;
-            case INV:
-                calculator.apply(Function.INV);
-                break;
-        }
-        final Calculable<T> newValue = calculator.getRightOperand();
+        try {
+            switch (function) {
+                case SQR:
+                    calculator.apply(Function.SQR);
+                    break;
 
-        editor.setValue(newValue.toString());
+                case INV:
+                    calculator.apply(Function.INV);
+                    break;
+            }
+            final Calculable<T> newValue = calculator.getRightOperand();
+
+            editor.setValue(newValue.toString());
+        } catch (IllegalArgumentException e) {
+            editor.setValue("ERROR");
+        }
     }
 
     public void setOperation(SupportedOperation operation) {
-        if (isOperationSet && !currentOperandIsLeft) {
+        if (state == State.EditingRightOperand) {
             execute();
         }
 
-        isOperationSet = true;
+        state = State.OperationSet;
 
         switch (operation) {
             case ADD:
@@ -140,7 +170,11 @@ public class Controller<T extends Calculable<T>> {
     }
 
     public void memoryAdd() {
-        memory.add(memory.getNumber());
+        try {
+            memory.add(editor.getNumberValue());
+        } catch (Exception e) {
+            memory.clear();
+        }
     }
 
     public boolean isMemoryEnabled() {
