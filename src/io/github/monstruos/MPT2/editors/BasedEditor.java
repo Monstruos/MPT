@@ -56,7 +56,7 @@ public class BasedEditor implements Editor<BasedNumber> {
         if (!value.startsWith("#")) {
             value = value.substring(0, value.length() - 1);
 
-            if (value.isEmpty()) {
+            if (value.isEmpty() || value.equals("-")) {
                 value = ZERO;
             }
         } else {

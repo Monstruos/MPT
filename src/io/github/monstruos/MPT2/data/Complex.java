@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Complex implements Calculable<Complex> {
     public static final Complex ZERO = new Complex(0, 0);
     public static final Complex ONE = new Complex(1, 0);
+    public static final String SEPARATOR = "i*";
 
     private final double re;
     private final double im;
@@ -12,6 +13,24 @@ public class Complex implements Calculable<Complex> {
     public Complex(double real, double imaginary) {
         this.re = real;
         this.im = imaginary;
+    }
+
+    public static Complex valueOf(String number) {
+        final double re;
+        final double im;
+
+        int imSign = 1;
+
+        final int pos = number.indexOf(SEPARATOR);
+        if (pos != -1) {
+            re = Double.valueOf(number.substring(0, pos - 1));
+            im = Double.valueOf(number.substring(pos + SEPARATOR.length())) * imSign;
+        } else {
+            re = Double.valueOf(number);
+            im = 0;
+        }
+
+        return new Complex(re, im);
     }
 
     @Override
