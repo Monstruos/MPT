@@ -5,6 +5,8 @@ import java.util.Objects;
 public class Fraction implements Calculable<Fraction> {
     public static final Fraction ZERO = new Fraction(0, 1);
 
+    public static final char SEPARATOR = '/';
+
     private int numerator;
     private int denominator;
 
@@ -13,10 +15,32 @@ public class Fraction implements Calculable<Fraction> {
             throw new IllegalArgumentException("Trying to create (" + numerator + "/0) fraction");
         }
 
+
+
         this.numerator = numerator;
         this.denominator = denominator;
 
         reduce();
+
+        if (this.denominator < 0) {
+            this.numerator *= -1;
+            this.denominator *= -1;
+        }
+    }
+
+    public static Fraction valueOf(String number) {
+        int index = number.indexOf(SEPARATOR);
+        if (index != -1) {
+            return new Fraction(Integer.valueOf(number.substring(0, index)),
+                    Integer.valueOf(number.substring(index + 1)));
+        } else {
+            return new Fraction(Integer.valueOf(number), 1);
+        }
+
+    }
+
+    public static String convertDigit(int digit) {
+        return Integer.toString(digit);
     }
 
     private static int gcd(final int a, final int b) {
@@ -91,7 +115,7 @@ public class Fraction implements Calculable<Fraction> {
 
     @Override
     public String toString() {
-        return String.format("[%d/%d]", numerator, denominator);
+        return String.format("%d/%d", numerator, denominator);
     }
 
     @Override
