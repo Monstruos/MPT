@@ -49,8 +49,7 @@ public class Editor {
 
 
     public void addDigit(int digit) {
-
-        if (digit < inputBase && precision < Converter.MAX_PRECISION) {
+        if (digit < inputBase && precision < Converter.maxPrecisionForBase(inputBase)) {
             if (inputValue.equals(ZERO) || inputValue.startsWith("#")) {
                 clear();
                 inputValue = "";
